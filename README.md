@@ -15,3 +15,4 @@ to do list:
 
 prob do this on jupyter. 
 
+![alt text](/images/college.png)
