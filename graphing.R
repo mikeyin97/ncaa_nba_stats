@@ -1,5 +1,8 @@
 # imports
-library(ggplot2) 
+
+library(ggplot2)
+library(grid)
+library(gridExtra)
 MINIMUM = 10
 nba_stats <- read.csv("regular_season_stats.csv")
 college_stats <- read.csv("college_stats.csv")
@@ -10,7 +13,7 @@ merged_stats$ts.y<-(merged_stats$PTS.y)*(merged_stats$GP.y)/
   2/(merged_stats$FGA.y*merged_stats$GP.y+(0.44)*(merged_stats$FTA.y*merged_stats$GP.y))
 
 
-merged_stats_college <- subset(merged_stats, (FGA.y*GP.y>MINIMUM)&(FTA.y*GP.y>MINIMUM)&(FGA3.y*GP.y>MINIMUM))
+merged_stats_college <- subset(merged_stats, (FGA.y*GP.y>MINIMUM)&(FTA.y*GP.y>MINIMUM)&(FG3A.y*GP.y>MINIMUM))
 
 merged_stats_min = subset(merged_stats, (FGA.y*GP.y>MINIMUM)&(FTA.y*GP.y>MINIMUM)&(FGA.x*GP.x>MINIMUM)&(FTA.x*GP.x>MINIMUM))
 merged_stats_3s = subset(merged_stats, (FG3A.x*GP.x>MINIMUM))
@@ -18,15 +21,17 @@ c_shooting_splits <- merged_stats[,c("FT_PCT.y","FG_PCT.y","FG3_PCT.y")]
 
 
 #get college shooting splits, indiv columns, etc. 
-hist(merged_stats_3s$ts.y, breaks="FD")
-hist(merged_stats_3s$FG_PCT.y, breaks="FD")
-hist(merged_stats_3s$FG3_PCT.y, breaks="FD")
-hist(merged_stats_3s$FT_PCT.y, breaks="FD")
+par(mfrow=c(2,2))
+hist(merged_stats_3s$ts.y, breaks="FD",main = "TS% - College", col = "darkblue")
+hist(merged_stats_3s$FG_PCT.y, breaks="FD", main = "FG% - College", col = "darkblue")
+hist(merged_stats_3s$FG3_PCT.y, breaks="FD", main = "3FG% - College", col = "darkblue")
+hist(merged_stats_3s$FT_PCT.y, breaks="FD", main = "FT% - COllege", col = "darkblue")
 
-hist(merged_stats_3s$ts.x, breaks="FD")
-hist(merged_stats_3s$FG_PCT.x, breaks="FD")
-hist(merged_stats_3s$FG3_PCT.x, breaks="FD")
-hist(merged_stats_3s$FT_PCT.x, breaks="FD")
+par(mfrow=c(2,2))
+hist(merged_stats_3s$ts.x, breaks="FD", main = "TS% - NBA", col = "darkblue")
+hist(merged_stats_3s$FG_PCT.x, breaks="FD", main = "FG% - NBA", col = "darkblue")
+hist(merged_stats_3s$FG3_PCT.x, breaks="FD", main = "3FG% - NBA", col = "darkblue")
+hist(merged_stats_3s$FT_PCT.x, breaks="FD", main = "FT% - NBA", col = "darkblue")
 #ggpairs(c_shooting_splits, colour="gray20")
 
 # comment on normality and shape of distributions
@@ -48,15 +53,17 @@ xstar <- seq(min(x)-1,max(x)+1,.1)
 ystar <- b0+b1*xstar 
 ci <- qt(.975,n-2)*S*sqrt(1/n+(xstar-mx)^2/Sxx) 
 ciLower <- ystar-ci; ciHigher <- ystar+ci
+par(mfrow=c(1,1))
 plot(x,y,xlim=c(min(x),max(x)),
-     ylim=c(min(y),max(y)))
+     ylim=c(min(y),max(y)),
+     pch=16,cex=0.8, main = "NBA TS% vs College FT%", xlab = "College FT%", ylab = "NBA TS%")
 pi <- qt(.975,n-2)*S*sqrt(1+1/n+(xstar-mx)^2/Sxx)
 piLower <- ystar-pi; piHigher <- ystar+pi
-lines(xstar,ystar,type="l",col="black")
-lines(xstar,ciLower,type="l",col="red")
-lines(xstar,ciHigher,type="l",col="red")
-lines(xstar,piLower,type="l",col="green")
-lines(xstar,piHigher,type="l",col="green")
+lines(xstar,ystar,type="l",col="black", lwd=3)
+lines(xstar,ciLower,type="l",col="red", lwd = 2)
+lines(xstar,ciHigher,type="l",col="red", lwd = 2)
+lines(xstar,piLower,type="l",col="green", lwd = 2)
+lines(xstar,piHigher,type="l",col="green", lwd = 2)
 
 seB0 <- S*sqrt(1/n+mx^2/Sxx) 
 seB1 <- S/sqrt(Sxx) 
