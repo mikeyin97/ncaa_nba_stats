@@ -1,4 +1,5 @@
 # imports
+library(ggplot2) 
 MINIMUM = 10
 nba_stats <- read.csv("regular_season_stats.csv")
 college_stats <- read.csv("college_stats.csv")
@@ -34,7 +35,7 @@ hist(merged_stats_3s$FT_PCT.x, breaks="FD")
 
 # FT PCT vs True Shooting NBA
 
-x<-merged_stats_3s[,c("ft.y")];
+x<-merged_stats_3s[,c("FT_PCT.y")];
 y<-merged_stats_3s[,c("ts.x")]
 n <- length(x);
 mx <- mean(x); my <- mean(y)
