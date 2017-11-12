@@ -11,6 +11,9 @@ NBA TS vs College FT
 ![alt text](/images/nba_ts_college_ft.png)
 ![alt text](/images/residuals.png)
 
+p-value = 0.02856, reject the null hypothesis
+statistical evidence of a relationship between NBA TS and College FT
+
 
 to do list:
 1) get stats of active nba players - Done
